@@ -446,8 +446,9 @@ let current = 0;
 function showSlide(n) {
   if (n < 0) n = 0;
   if (n >= total) n = total - 1;
+  if (current === n) return;
   current = n;
-  slides[n].scrollIntoView({ behavior: 'smooth' });
+  slides[n].scrollIntoView();
   document.getElementById('page-num').textContent = (current + 1) + ' / ' + total;
   document.getElementById('nav-info').textContent = (current + 1) + ' / ' + total;
 }
@@ -457,10 +458,19 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
   if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
 });
+let scrollTimeout;
 window.addEventListener('scroll', function() {
-  let idx = Math.round(window.scrollY / window.innerHeight);
-  if (idx !== current && idx >= 0 && idx < total) { current = idx; document.getElementById('page-num').textContent = (current + 1) + ' / ' + total; document.getElementById('nav-info').textContent = (current + 1) + ' / ' + total; }
-});
+  clearTimeout(scrollTimeout);
+  scrollTimeout = setTimeout(function() {
+    let idx = Math.round(window.scrollY / window.innerHeight);
+    idx = Math.max(0, Math.min(idx, total - 1));
+    if (idx !== current) {
+      current = idx;
+      document.getElementById('page-num').textContent = (current + 1) + ' / ' + total;
+      document.getElementById('nav-info').textContent = (current + 1) + ' / ' + total;
+    }
+  }, 50);
+}, { passive: true });
 showSlide(0);
 </script>
 </body>
