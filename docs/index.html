@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OpenMarket - Premium Minimal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #faf9f7;
+      --bg-card: #ffffff;
+      --primary: #1a1a1a;
+      --secondary: #6b6b6b;
+      --accent: #c9a84c;
+      --accent-light: #f5ecd4;
+      --text: #1a1a1a;
+      --text-muted: #888;
+      --border: #e8e5e0;
+    }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.6; }
+    .slide { min-height: 100vh; padding: 80px 100px; display: flex; flex-direction: column; justify-content: center; border-bottom: 1px solid var(--border); position: relative; }
+    .slide-cover { background: var(--bg); }
+    h1 { font-family: 'Newsreader', serif; font-size: 5.5em; font-weight: 600; color: var(--primary); line-height: 1.1; letter-spacing: -0.02em; }
+    h2 { font-family: 'Newsreader', serif; font-size: 2.8em; font-weight: 600; color: var(--primary); margin-bottom: 50px; letter-spacing: -0.02em; }
+    h3 { font-family: 'Newsreader', serif; font-size: 1.5em; font-weight: 600; color: var(--primary); margin-bottom: 24px; }
+    .tag { display: inline-block; padding: 8px 20px; background: var(--accent-light); color: var(--accent); font-size: 0.8em; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 2px; }
+    .subtitle { font-size: 1.4em; color: var(--secondary); margin-top: 30px; max-width: 700px; line-height: 1.7; font-weight: 300; }
+    .meta { margin-top: 80px; color: var(--text-muted); font-size: 0.95em; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 40px; }
+    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 30px; }
+    .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 40px; }
+    .card h4 { font-family: 'Newsreader', serif; font-size: 1.2em; margin-bottom: 14px; }
+    .card p, .card li { font-size: 1em; color: var(--secondary); line-height: 1.7; }
+    .card li { margin: 8px 0; }
+    .table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+    .table th { padding: 16px 24px; text-align: left; color: var(--text-muted); font-size: 0.75em; text-transform: uppercase; letter-spacing: 0.12em; border-bottom: 2px solid var(--border); font-weight: 500; }
+    .table td { padding: 16px 24px; border-bottom: 1px solid var(--border); font-size: 0.95em; }
+    .table tr:last-child td { border-bottom: none; }
+    .weight { color: var(--accent); font-weight: 600; }
+    .timeline { display: flex; justify-content: space-between; margin-top: 60px; position: relative; }
+    .timeline::before { content: ''; position: absolute; top: 28px; left: 8%; right: 8%; height: 1px; background: var(--border); }
+    .timeline-item { text-align: center; flex: 1; position: relative; z-index: 1; }
+    .timeline-dot { width: 56px; height: 56px; background: var(--bg); border: 1px solid var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-family: 'JetBrains Mono', monospace; font-weight: 500; font-size: 0.8em; color: var(--primary); }
+    .timeline-title { font-size: 1em; font-weight: 500; margin-bottom: 6px; }
+    .timeline-desc { font-size: 0.75em; color: var(--text-muted); }
+    .timeline-detail { font-size: 0.7em; color: var(--text-muted); margin-top: 10px; line-height: 1.6; max-width: 110px; margin-left: auto; margin-right: auto; }
+    .arch-box { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 32px; text-align: center; }
+    .arch-box h4 { font-family: 'Newsreader', serif; font-size: 1.1em; margin-bottom: 10px; }
+    .arch-box p { color: var(--text-muted); font-size: 0.9em; }
+    .arrow { color: var(--text-muted); font-size: 1.5em; text-align: center; margin: 10px 0; }
+    .split { display: flex; gap: 70px; align-items: center; }
+    .split-left { flex: 1; }
+    .split-right { flex: 1; }
+    .footer { text-align: center; padding: 40px; color: var(--text-muted); font-size: 0.85em; }
+    .page-num { position: fixed; bottom: 20px; right: 30px; color: var(--border); font-size: 0.85em; }
+    .nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 100; }
+    .nav button { background: var(--bg-card); color: var(--primary); border: 1px solid var(--border); padding: 8px 24px; border-radius: 2px; cursor: pointer; font-size: 0.9em; transition: all 0.2s; }
+    .nav button:hover { border-color: var(--primary); }
+    .highlight { color: var(--primary); font-weight: 600; }
+    .accent { color: var(--accent); }
+    .slide-cover .kicker { color: var(--text-muted); font-size: 0.85em; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 24px; }
+    .slide-cover .big-tag { display: inline-block; padding: 10px 28px; background: var(--accent); color: #fff; font-size: 0.9em; font-weight: 600; letter-spacing: 0.05em; margin-top: 50px; border-radius: 2px; }
+    .slide-cover h1 { font-style: italic; }
+    .formula { background: var(--accent-light); border-radius: 6px; padding: 24px 30px; margin-top: 24px; }
+    .formula p { font-family: 'JetBrains Mono', monospace; color: var(--primary); font-size: 0.95em; line-height: 2; }
+    .four-layer { display: flex; flex-direction: column; gap: 0; }
+    .layer-item { display: flex; align-items: center; gap: 28px; padding: 16px 0; border-bottom: 1px solid var(--border); }
+    .layer-item:last-child { border-bottom: none; }
+    .layer-num { font-family: 'JetBrains Mono', monospace; font-size: 1.2em; font-weight: 500; color: var(--accent); min-width: 50px; }
+    .layer-content h4 { font-family: 'Newsreader', serif; font-size: 1.05em; margin-bottom: 4px; }
+    .layer-content p { color: var(--text-muted); font-size: 0.9em; }
+    .anti-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 24px; }
+    .anti-card h4 { font-size: 0.85em; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .anti-card p { color: var(--secondary); font-size: 0.9em; }
+  </style>
+</head>
+<body>
+
+<!-- Slide 1: Cover -->
+<div class="slide slide-cover" id="slide-1">
+  <div class="kicker">Bittensor Subnet Proposal &nbsp;·&nbsp; 2026</div>
+  <h1>OpenMarket</h1>
+  <p class="subtitle">去中心化内容营销网络，在 Bittensor 上<br>让所有项目实现跨平台、批量、低成本的大规模曝光和转化</p>
+  <div class="big-tag">2026 年 5 月 &nbsp;|&nbsp; 产品创始人、技术负责人</div>
+</div>
+
+<!-- Slide 2: 背景痛点 -->
+<div class="slide" id="slide-2">
+  <h2>项目背景</h2>
+  <div class="split">
+    <div class="split-left">
+      <h3>项目方的营销困境</h3>
+      <p class="subtitle" style="font-size:1.1em; margin-top:20px;">任何项目完成产品开发后，<span class="highlight">推广和营销成为最大的卡点</span>。</p>
+      <ul style="margin-top:30px; font-size:1.05em; color:var(--secondary);">
+        <li>平台碎片化，每个平台单独对接</li>
+        <li>难以批量化、低成本曝光</li>
+        <li>缺乏专业内容创作能力</li>
+        <li>营销效果难以量化归因</li>
+      </ul>
+    </div>
+    <div class="split-right">
+      <h3>解决方案</h3>
+      <div class="card">
+        <h4>去中心化内容营销层</h4>
+        <ul style="margin-top:16px;">
+          <li>跨平台统一分发（6+ 平台）</li>
+          <li>分设备/分IP 行为模拟</li>
+          <li>AI 全链路内容生成</li>
+          <li>结果导向评估结算</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 3: 节点架构 -->
+<div class="slide" id="slide-3">
+  <h2>节点架构</h2>
+  <div style="text-align:center; padding:20px 0;">
+    <div class="arch-box" style="max-width:380px; display:inline-block;">
+      <h4>项目方 / 需求方</h4>
+      <p>产品信息 + 营销目标</p>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="arch-box" style="max-width:460px; display:inline-block; border-color:var(--accent);">
+      <h4>内容生成分发节点 Miner</h4>
+      <p>AI 内容生成（文案/图片/视频） · 跨平台分发 · 分设备/分IP</p>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="arch-box" style="max-width:380px; display:inline-block;">
+      <h4>验证节点 Validator</h4>
+      <p>四层漏斗评估 · 反作弊检测</p>
+    </div>
+    <div class="arrow">↓</div>
+    <div class="arch-box" style="max-width:380px; display:inline-block;">
+      <h4>Yuma Consensus</h4>
+      <p>权重确定与 Token 排放</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 4: 激励机制 -->
+<div class="slide" id="slide-4">
+  <h2>激励机制设计</h2>
+  <div class="grid-2">
+    <div>
+      <h3>基准击败模型</h3>
+      <ul style="font-size:1.05em; color:var(--secondary); margin-top:16px;">
+        <li>表现最好的节点获得最多 Token</li>
+        <li>新纪录成为新基准，直到被超越</li>
+        <li>多个优秀者按比例分享奖励</li>
+        <li>突破性创新放大奖励</li>
+      </ul>
+      <div style="margin-top:40px;">
+        <h3>代币经济学</h3>
+        <div class="formula">
+          <p>内容节点 → <span class="accent">60%</span></p>
+          <p>验证节点 → <span class="accent">20%</span></p>
+          <p>生态基金 + 燃烧 → <span class="accent">20%</span></p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>营销效果评分维度</h3>
+      <table class="table">
+        <tr><th>维度</th><th>权重</th></tr>
+        <tr><td>浏览量</td><td class="weight">20%</td></tr>
+        <tr><td>互动量</td><td class="weight">25%</td></tr>
+        <tr><td>分享量</td><td class="weight">15%</td></tr>
+        <tr><td>转化量</td><td class="weight">30%</td></tr>
+        <tr><td>账号质量</td><td class="weight">10%</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 5: 账号质量 -->
+<div class="slide" id="slide-5">
+  <h2>账号质量量化方案</h2>
+  <table class="table">
+    <tr><th>指标</th><th>权重</th><th>说明</th></tr>
+    <tr><td>粉丝数</td><td class="weight">20%</td><td>账号影响力，对数压缩避免头部垄断</td></tr>
+    <tr><td>账号年龄</td><td class="weight">15%</td><td>账号可信度</td></tr>
+    <tr><td>认证状态</td><td class="weight">15%</td><td>蓝标/黄标/企业号</td></tr>
+    <tr><td>发帖频率</td><td class="weight">10%</td><td>账号活跃度</td></tr>
+    <tr><td>互动率</td><td class="weight">25%</td><td>(互动/粉丝) 比率</td></tr>
+    <tr><td>内容质量</td><td class="weight">15%</td><td>平均点赞/评论</td></tr>
+  </table>
+  <div class="formula" style="margin-top:30px;">
+    <p>QualityScore = log(1+粉丝数)×0.20 + 年龄×0.15 + 认证×0.15 + 发帖×0.10 + 互动率×0.25 + 内容质量×0.15</p>
+  </div>
+</div>
+
+<!-- Slide 6: 验证节点 -->
+<div class="slide" id="slide-6">
+  <h2>验证节点评估流程</h2>
+  <h3>四层漏斗评估</h3>
+  <div class="four-layer" style="margin-top:30px;">
+    <div class="layer-item">
+      <div class="layer-num">01</div>
+      <div class="layer-content">
+        <h4>基础数据捕获</h4>
+        <p>通过平台 API 获取原始数据（浏览量、互动量、分享量、转化量）</p>
+      </div>
+    </div>
+    <div class="layer-item">
+      <div class="layer-num">02</div>
+      <div class="layer-content">
+        <h4>账号质量筛选</h4>
+        <p>过滤明显机器人账号，只统计真实用户互动</p>
+      </div>
+    </div>
+    <div class="layer-item">
+      <div class="layer-num">03</div>
+      <div class="layer-content">
+        <h4>加权评分</h4>
+        <p>按账号质量指标计算加权评分</p>
+      </div>
+    </div>
+    <div class="layer-item">
+      <div class="layer-num">04</div>
+      <div class="layer-content">
+        <h4>归因确认</h4>
+        <p>将效果归因到具体内容生成分发节点</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 7: 反作弊 -->
+<div class="slide" id="slide-7">
+  <h2>反作弊机制</h2>
+  <p style="color:var(--text-muted); margin-bottom:30px; font-size:1.05em;">本网络采用结果导向评估，不关心是否机器人，只看最终效果。</p>
+  <div class="grid-2">
+    <div class="anti-card">
+      <h4>刷量识别</h4>
+      <p>同一批账号集中给多个内容互动 → 视为作弊，降低权重</p>
+    </div>
+    <div class="anti-card">
+      <h4>异常峰值过滤</h4>
+      <p>短时间内浏览量暴涨但无互动 → 可能是机器刷量，过滤</p>
+    </div>
+    <div class="anti-card">
+      <h4>账号质量门槛</h4>
+      <p>低于一定质量分的互动不计入评分</p>
+    </div>
+    <div class="anti-card">
+      <h4>历史行为验证</h4>
+      <p>账号是否有过往正常互动记录</p>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 8: 竞争优势 -->
+<div class="slide" id="slide-8">
+  <h2>竞争优势</h2>
+  <table class="table">
+    <tr><th>对比</th><th>OpenMarket 优势</th></tr>
+    <tr><td>vs 传统广告</td><td>去中心化、无单点故障、内置激励、低成本</td></tr>
+    <tr><td>vs 中心化平台</td><td>透明可验证、按效果结算、无中间商抽成</td></tr>
+    <tr><td>vs MCP 原生工具</td><td>跨平台分发 + 效果评估 + 代币激励</td></tr>
+    <tr><td>vs Bittensor 子网</td><td>专注营销分发、分设备分IP、结果导向评估</td></tr>
+  </table>
+  <div class="card" style="margin-top:40px; text-align:center;">
+    <h4 style="font-size:1.2em;">首个结果导向、激励驱动、跨平台的去中心化营销网络</h4>
+  </div>
+</div>
+
+<!-- Slide 9: 路线图 -->
+<div class="slide" id="slide-9">
+  <h2>路线图</h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot">M1</div>
+      <div class="timeline-title">核心协议</div>
+      <div class="timeline-desc">Month 1-2</div>
+      <div class="timeline-detail">节点协议<br>分发引擎<br>AI内容生成</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot">M2</div>
+      <div class="timeline-title">测试网</div>
+      <div class="timeline-desc">Month 3-4</div>
+      <div class="timeline-detail">内部测试网<br>评估框架<br>节点激励</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot">M3</div>
+      <div class="timeline-title">主网启动</div>
+      <div class="timeline-desc">Month 5-6</div>
+      <div class="timeline-detail">主网上线<br>Yuma Consensus<br>真实项目接入</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot">M4</div>
+      <div class="timeline-title">生态扩展</div>
+      <div class="timeline-desc">Month 7-9</div>
+      <div class="timeline-detail">主流Agent集成<br>更多平台</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot">M5</div>
+      <div class="timeline-title">企业采用</div>
+      <div class="timeline-desc">Month 10-12</div>
+      <div class="timeline-detail">企业客户<br>垂直场景<br>品牌建设</div>
+    </div>
+  </div>
+</div>
+
+<!-- Slide 10: 团队 -->
+<div class="slide" id="slide-10">
+  <h2>团队与资源</h2>
+  <div class="grid-3" style="margin-top:40px;">
+    <div class="card">
+      <h4>产品创始人</h4>
+      <p style="margin-top:12px;">Web3 资深产品</p>
+      <p style="color:var(--text-muted); font-size:0.9em; margin-top:6px;">架构设计 + 产品规划</p>
+    </div>
+    <div class="card">
+      <h4>技术负责人</h4>
+      <p style="margin-top:12px;">Web3 技术总监</p>
+      <p style="color:var(--text-muted); font-size:0.9em; margin-top:6px;">协议实现 + 系统架构</p>
+    </div>
+    <div class="card">
+      <h4>生态负责人</h4>
+      <p style="margin-top:12px;">大规模营销资源</p>
+      <p style="color:var(--text-muted); font-size:0.9em; margin-top:6px;">增长 + 社区建设</p>
+    </div>
+  </div>
+  <div style="margin-top:50px;">
+    <h3>已有资源</h3>
+    <ul style="font-size:1.05em; color:var(--secondary); margin-top:16px;">
+      <li>Web3 产品与技术经验积累</li>
+      <li>大规模营销资源与行业人脉</li>
+      <li>Bittensor 生态深度理解</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Slide 11: 总结 -->
+<div class="slide slide-cover" id="slide-11" style="text-align:center; align-items:center;">
+  <h1 style="font-size:3.2em; margin-bottom:50px;">核心价值主张</h1>
+  <div style="max-width:750px;">
+    <p style="font-size:1.3em; line-height:1.9; font-style:italic; font-family:'Newsreader',serif; color:var(--secondary);">OpenMarket 解决了所有项目「推广营销」的最后一公里瓶颈——通过<span class="highlight">去中心化、激励驱动、跨平台</span>的方案，让每个有推广需求的项目都能实现跨平台、批量、低成本的大规模曝光与转化。</p>
+  </div>
+  <div style="margin-top:60px; text-align:left; max-width:750px;">
+    <h3 style="font-size:1.2em; margin-bottom:20px;">为什么选择 OpenMarket</h3>
+    <ul style="font-size:1.05em; line-height:2.1; color:var(--secondary);">
+      <li><span class="highlight">解决的问题够痛</span>：推广是所有项目最大的卡点</li>
+      <li><span class="highlight">技术护城河深</span>：跨平台 + 分IP + AI生成 + 结果评估</li>
+      <li><span class="highlight">经济自洽</span>：网络效应 + 分层收费</li>
+      <li><span class="highlight">生态协同</span>：DeAI 基础设施核心组成</li>
+    </ul>
+  </div>
+  <p style="color:var(--accent); font-size:1.8em; font-weight:600; margin-top:80px; font-family:'Newsreader',serif; font-style:italic;">让所有项目不再为推广发愁</p>
+  <p style="color:var(--text-muted); margin-top:20px;">2026 年 5 月</p>
+</div>
+
+<div class="footer">OpenMarket &nbsp;|&nbsp; 去中心化内容营销层平台</div>
+<div class="page-num" id="page-num"></div>
+<div class="nav">
+  <button onclick="prevSlide()">← Prev</button>
+  <span id="nav-info" style="color:var(--text-muted); font-size:0.85em;"></span>
+  <button onclick="nextSlide()">Next →</button>
+</div>
+
+<script>
+let slides = document.querySelectorAll('.slide');
+let total = slides.length;
+let current = 0;
+function showSlide(n) {
+  if (n < 0) n = 0;
+  if (n >= total) n = total - 1;
+  current = n;
+  slides[n].scrollIntoView({ behavior: 'smooth' });
+  document.getElementById('page-num').textContent = (current + 1) + ' / ' + total;
+  document.getElementById('nav-info').textContent = (current + 1) + ' / ' + total;
+}
+function nextSlide() { showSlide(current + 1); }
+function prevSlide() { showSlide(current - 1); }
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); prevSlide(); }
+});
+window.addEventListener('scroll', function() {
+  let idx = Math.round(window.scrollY / window.innerHeight);
+  if (idx !== current && idx >= 0 && idx < total) { current = idx; document.getElementById('page-num').textContent = (current + 1) + ' / ' + total; document.getElementById('nav-info').textContent = (current + 1) + ' / ' + total; }
+});
+showSlide(0);
+</script>
+</body>
+</html>
