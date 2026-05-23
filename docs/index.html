@@ -447,14 +447,17 @@
 let slides = document.querySelectorAll('.slide');
 let total = slides.length;
 let current = 0;
+let isScrolling = false;
 function showSlide(n) {
   if (n < 0) n = 0;
   if (n >= total) n = total - 1;
   if (current === n) return;
   current = n;
-  slides[n].scrollIntoView();
+  isScrolling = true;
+  slides[n].scrollIntoView({ behavior: 'smooth' });
   document.getElementById('page-num').textContent = (current + 1) + ' / ' + total;
   document.getElementById('nav-info').textContent = (current + 1) + ' / ' + total;
+  setTimeout(() => { isScrolling = false; }, 600);
 }
 function nextSlide() { showSlide(current + 1); }
 function prevSlide() { showSlide(current - 1); }
@@ -464,8 +467,10 @@ document.addEventListener('keydown', function(e) {
 });
 let scrollTimeout;
 window.addEventListener('scroll', function() {
+  if (isScrolling) return;
   clearTimeout(scrollTimeout);
   scrollTimeout = setTimeout(function() {
+    if (isScrolling) return;
     let idx = Math.round(window.scrollY / window.innerHeight);
     idx = Math.max(0, Math.min(idx, total - 1));
     if (idx !== current) {
@@ -473,7 +478,7 @@ window.addEventListener('scroll', function() {
       document.getElementById('page-num').textContent = (current + 1) + ' / ' + total;
       document.getElementById('nav-info').textContent = (current + 1) + ' / ' + total;
     }
-  }, 50);
+  }, 100);
 }, { passive: true });
 showSlide(0);
 </script>
